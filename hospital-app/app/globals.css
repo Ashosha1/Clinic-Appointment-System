@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #FFFFFF;
+  --bg2: #F4F8F6;
+  --bg3: #E8F2EE;
+  --nav-bg: rgba(255, 255, 255, 0.92);
+  --txt: #0D1F1A;
+  --txt2: #3D5A52;
+  --txt3: #7A9A90;
+  --p: #0B6E4F;        /* primary — deep teal */
+  --p2: #1D9E75;       /* primary hover */
+  --p3: #E6F4EF;       /* primary light bg */
+  --p-light: #E6F4EF;  /* alias of --p3, used for active nav links */
+  --p4: #064033;       /* primary dark */
+  --blue: #1A4DB5;
+  --blue-light: #EBF2FF;
+  --amber: #C05621;
+  --amber-light: #FEF3E2;
+  --red: #C53030;
+  --red-light: #FFF5F5;
+  --green: #276749;
+  --green-light: #F0FFF4;
+  --purple: #553C9A;
+  --purple-light: #EDE9FE;
+  --border: #D6E8E0;
+  --card: #FFFFFF;
+  --card-border: #D6E8E0;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 1px 3px rgba(11, 110, 79, 0.08);
+}
+
+[data-theme="dark"] {
+  --bg: #0A1512;
+  --bg2: #111E19;
+  --bg3: #162520;
+  --nav-bg: rgba(10, 21, 18, 0.92);
+  --txt: #E8F2EE;
+  --txt2: #9FC4B8;
+  --txt3: #5A8A7A;
+  --p: #1D9E75;
+  --p2: #2EBD8A;
+  --p3: #0D2E22;
+  --p-light: #0D2E22;
+  --p4: #A8DCC8;
+  --blue: #4B7FE0;
+  --blue-light: #1A2A4A;
+  --amber: #FBD38D;
+  --amber-light: #3D2000;
+  --red: #FC8181;
+  --red-light: #2D0000;
+  --green: #9AE6B4;
+  --green-light: #0D2E1A;
+  --purple: #C4B5FD;
+  --purple-light: #2D1B69;
+  --border: #1E3A30;
+  --card: #111E19;
+  --card-border: #1E3A30;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  body {
+    background-color: var(--bg);
+    color: var(--txt);
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Consistent keyboard focus ring on all interactive elements. */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [tabindex]:focus-visible,
+  [role='button']:focus-visible {
+    outline: 2px solid var(--p);
+    outline-offset: 2px;
+  }
+}
+
+/* Honor the user's reduced-motion preference everywhere. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

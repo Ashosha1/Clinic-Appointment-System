@@ -1,0 +1,24 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "next-app",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev:watch", "--prefix", "hospital-app"],
+      "port": 3000,
+      "autoPort": true
+    },
+    {
+      "name": "backend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", "hospital-app/backend"],
+      "port": 5000
+    },
+    {
+      "name": "frontend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", "hospital-app/frontend"],
+      "port": 3000
+    }
+  ]
+}

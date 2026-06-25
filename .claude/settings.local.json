@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(node -e \"const sqlite = require\\('node:sqlite'\\); console.log\\('builtin sqlite ok'\\)\")",
+      "Bash(node seed.js)",
+      "Bash(npm create *)",
+      "Bash(rm -rf \"\\(patient\\)\" \"\\(doctor\\)\" \"\\(admin\\)\" \"\\(auth\\)/callback\")",
+      "Bash(mkdir -p patient/dashboard patient/book patient/appointments patient/find-doctor patient/history patient/profile)",
+      "Bash(mkdir -p doctor/dashboard doctor/schedule doctor/availability doctor/profile)",
+      "Bash(mkdir -p admin/dashboard admin/appointments admin/analytics admin/doctors admin/patients admin/notifications admin/settings)",
+      "Bash(mkdir -p auth/callback onboarding)",
+      "Bash(npx tsc *)",
+      "Bash(echo \"---EXIT $?---\")",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(npm run *)",
+      "Bash(npx supabase *)",
+      "Bash(command -v supabase)"
+    ]
+  }
+}
