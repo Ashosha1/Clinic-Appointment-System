@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 
 import { createClient, createServiceRoleClient } from '@/lib/supabase/server'
 import { getCurrentPatient } from '@/lib/auth/current-patient'
+import { sendAppointmentEmail } from '@/lib/notifications/appointment-emails'
 import type { ActionResult } from './_helpers'
 
 export interface BookAppointmentInput {
@@ -47,6 +48,14 @@ export async function bookAppointment(input: BookAppointmentInput): Promise<Book
       }
     }
     return { success: false, error: result?.error ?? 'Could not book the appointment.' }
+  }
+
+  // Email the patient a confirmation. Best-effort: a send failure must not fail
+  // the booking, which already succeeded.
+  try {
+    await sendAppointmentEmail(result.id!, 'confirmation')
+  } catch (err) {
+    console.error('[bookAppointment] confirmation email failed:', err)
   }
 
   revalidatePath('/patient/appointments')
@@ -115,6 +124,13 @@ export async function cancelAppointment(appointmentId: string): Promise<ActionRe
         patient_name: patient.full_name ?? null,
       },
     })
+  }
+
+  // Email the patient confirming the cancellation. Best-effort.
+  try {
+    await sendAppointmentEmail(appointmentId, 'cancellation')
+  } catch (err) {
+    console.error('[cancelAppointment] cancellation email failed:', err)
   }
 
   revalidatePath('/patient/appointments')

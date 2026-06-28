@@ -15,10 +15,18 @@ Set these under **Project → Settings → Environment Variables** for the
 | `NEXT_PUBLIC_SUPABASE_URL`      | Client + Server  | Supabase → Project Settings → API → Project URL    |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Client + Server  | Supabase → Project Settings → API → anon/public    |
 | `SUPABASE_SERVICE_ROLE_KEY`     | **Server only**  | Supabase → Project Settings → API → service_role   |
+| `NEXT_PUBLIC_SITE_URL`          | Client + Server  | Your production URL, e.g. `https://your-domain.com` |
+| `RESEND_API_KEY`                | **Server only**  | Resend → API Keys (`re_...`)                        |
+| `EMAIL_FROM`                    | Server only      | A verified Resend sender, e.g. `MediConnect <noreply@yourdomain.com>` |
+| `CRON_SECRET`                   | **Server only**  | Any long random string (auth for the reminder cron) |
 
 > `NEXT_PUBLIC_*` values are exposed to the browser — that is expected for the
-> URL and anon key. **Never** expose `SUPABASE_SERVICE_ROLE_KEY` to the client;
-> it must stay server-only (used in server actions / route handlers).
+> URL, anon key, and site URL. **Never** expose `SUPABASE_SERVICE_ROLE_KEY`,
+> `RESEND_API_KEY`, or `CRON_SECRET` to the client; they stay server-only (used
+> in server actions / route handlers).
+>
+> If `RESEND_API_KEY` is omitted, the app still runs — email sending is simply
+> skipped (logged, not errored).
 
 After changing env vars in Vercel, trigger a fresh deploy so they take effect.
 
@@ -59,26 +67,62 @@ Migrations applied (in order):
 0005_admin.sql              # admin views / RPCs
 0006_notifications_read.sql # notification read tracking
 0007_profile_visibility.sql # profile visibility rules
+0008_appointment_reminders.sql # reminder_sent_at column for the reminder cron
 ```
 
 Verify RLS is **enabled** on every table after push (Supabase → Auth → Policies).
 
 ---
 
-## 4. Edge Functions (notifications)
+## 4. Email notifications (Resend)
 
-> Current build delivers **in-app** notifications written directly to the
-> `notifications` table (see `lib/actions/notifications.ts`) — no Edge Function
-> is required for the platform to work today.
+Outbound email is sent through [Resend](https://resend.com)'s REST API directly
+from the Next.js server — there's **no Supabase Edge Function to deploy**.
 
-When you wire up outbound email/SMS, add the function under
-`supabase/functions/send-notification/` and deploy it:
+Emails sent:
 
-```bash
-supabase functions deploy send-notification
-# set any provider secrets the function needs, e.g.:
-supabase secrets set RESEND_API_KEY=...   # or SMTP creds
+| Trigger | Recipient | Code |
+| --- | --- | --- |
+| Appointment booked | Patient | `lib/actions/bookAppointment.ts` → `sendAppointmentEmail(id, 'confirmation')` |
+| Appointment cancelled | Patient | `lib/actions/bookAppointment.ts` (cancel) → `sendAppointmentEmail(id, 'cancellation')` |
+| 24h before appointment | Patient | `app/api/cron/reminders/route.ts` → `sendAppointmentEmail(id, 'reminder')` |
+
+> A **reschedule** is internally a new booking + a cancel, so the patient
+> receives both a confirmation (new time) and a cancellation (old time).
+
+Setup:
+
+1. Create a Resend account and an **API key**.
+2. **Verify a sending domain** (Resend → Domains) and set `EMAIL_FROM` to an
+   address on it. For quick testing you can use `onboarding@resend.dev`, which
+   only delivers to your own account email.
+3. Set `RESEND_API_KEY` and `EMAIL_FROM` in Vercel (see §1).
+
+In-app bell notifications still work independently (written to the
+`notifications` table — see `lib/actions/notifications.ts`).
+
+---
+
+## 4b. Reminder cron (Vercel Cron)
+
+`vercel.json` registers a daily cron that calls `/api/cron/reminders`:
+
+```json
+{ "crons": [{ "path": "/api/cron/reminders", "schedule": "0 8 * * *" }] }
 ```
+
+- Vercel automatically calls the route with `Authorization: Bearer $CRON_SECRET`,
+  which the route verifies — so **set `CRON_SECRET` in Vercel**.
+- The route scans `pending`/`confirmed` appointments occurring within ~30h that
+  have `reminder_sent_at IS NULL`, emails each patient, and stamps
+  `reminder_sent_at` so no appointment is ever reminded twice.
+- **Hobby plan:** cron runs at most **once per day** — the `0 8 * * *` schedule
+  fits. On Pro you can run it hourly for tighter "24h before" timing.
+- Manual test (replace the secret):
+  ```bash
+  curl -H "Authorization: Bearer $CRON_SECRET" https://your-domain.com/api/cron/reminders
+  ```
+  Returns JSON: `{ scanned, due, sent, failures }`.
 
 ---
 
@@ -113,7 +157,9 @@ Run through each item against the live domain before announcing the release.
 - [ ] Cancel an appointment → slot is released
 - [ ] Reschedule an appointment → old slot freed, new slot taken
 - [ ] Notification appears in the bell for the affected users
-- [ ] (When email is enabled) confirmation email delivered
+- [ ] Booking confirmation email delivered to the patient
+- [ ] Cancellation email delivered to the patient
+- [ ] Reminder cron runs (hit `/api/cron/reminders` with the Bearer secret → `sent` > 0 for a due appointment)
 
 **Platform**
 
