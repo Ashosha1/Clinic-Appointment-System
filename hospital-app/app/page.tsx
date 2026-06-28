@@ -93,30 +93,6 @@ const STATS = [
   { value: '98%', label: 'Patient satisfaction' },
 ]
 
-const TESTIMONIALS = [
-  {
-    quote:
-      'I booked a specialist in under a minute on my phone. No calls, no hold music — the confirmation hit my inbox before I put the phone down.',
-    initials: 'NA',
-    name: 'Noor Al-Rashidi',
-    role: 'Patient, Muscat',
-  },
-  {
-    quote:
-      'No-shows used to wreck my schedule. The automated reminders alone cut them by nearly half, and rescheduling is finally painless.',
-    initials: 'RM',
-    name: 'Dr. Rashid Al-Mani',
-    role: 'Cardiologist',
-  },
-  {
-    quote:
-      'For the first time I can see the whole clinic at a glance — volume, wait times, which doctors are stretched. The visibility changed how we plan.',
-    initials: 'AA',
-    name: 'Ahmed Al-Amri',
-    role: 'Clinic Director',
-  },
-]
-
 export default function Home() {
   return (
     <div className="min-h-screen bg-[var(--bg)] text-[var(--txt)]">
@@ -269,44 +245,6 @@ export default function Home() {
                 </div>
                 <div className="mt-1 text-[11px] text-white/65">{label}</div>
               </div>
-            ))}
-          </div>
-        </section>
-
-        {/* TESTIMONIALS */}
-        <section className="bg-[var(--bg2)] px-8 py-[52px] text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--p)]">
-            Loved by clinics & patients
-          </p>
-          <h2 className="mt-2 text-2xl font-medium">
-            Trusted across the region
-          </h2>
-          <div className="mx-auto mt-10 grid max-w-5xl gap-5 md:grid-cols-3">
-            {TESTIMONIALS.map(({ quote, initials, name, role }) => (
-              <figure
-                key={name}
-                className="flex flex-col rounded-[var(--radius)] border border-[var(--border)] bg-[var(--card)] p-6 text-left"
-              >
-                <blockquote className="flex-1 text-sm italic leading-relaxed text-[var(--txt2)]">
-                  “{quote}”
-                </blockquote>
-                <figcaption className="mt-5 flex items-center gap-3">
-                  <span
-                    aria-hidden="true"
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--p3)] text-sm font-semibold text-[var(--p)]"
-                  >
-                    {initials}
-                  </span>
-                  <span className="leading-tight">
-                    <span className="block text-sm font-medium text-[var(--txt)]">
-                      {name}
-                    </span>
-                    <span className="block text-xs text-[var(--txt3)]">
-                      {role}
-                    </span>
-                  </span>
-                </figcaption>
-              </figure>
             ))}
           </div>
         </section>
