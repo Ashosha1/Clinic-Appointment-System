@@ -15,7 +15,10 @@
       "mcp__Claude_Preview__preview_start",
       "Bash(npm run *)",
       "Bash(npx supabase *)",
-      "Bash(command -v supabase)"
+      "Bash(command -v supabase)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)"
     ]
   }
 }
