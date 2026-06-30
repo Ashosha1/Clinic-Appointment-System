@@ -10,7 +10,6 @@ export interface DoctorProfileInput {
   phone: string
   specialty: string
   bio: string
-  consultationFee: number | null
   avatarUrl?: string | null
   bufferMinutes: BufferMinutes
   isActive: boolean
@@ -31,9 +30,6 @@ export async function updateDoctorProfile(
 
   if (!input.fullName.trim()) return { error: 'Full name is required.' }
   if (!input.specialty.trim()) return { error: 'Specialty is required.' }
-  if (input.consultationFee != null && input.consultationFee < 0) {
-    return { error: 'Consultation fee cannot be negative.' }
-  }
 
   const profileUpdate: { full_name: string; phone: string | null; avatar_url?: string | null } = {
     full_name: input.fullName.trim(),
@@ -53,7 +49,6 @@ export async function updateDoctorProfile(
     .update({
       specialty: input.specialty.trim(),
       bio: input.bio.trim() || null,
-      consultation_fee: input.consultationFee,
       buffer_minutes: input.bufferMinutes,
       is_active: input.isActive,
     })

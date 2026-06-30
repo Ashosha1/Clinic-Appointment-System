@@ -51,9 +51,6 @@ export function OnboardingForm({ role, defaults }: Props) {
         ? {
             specialty: defaults.specialty ?? '',
             bio: defaults.bio ?? '',
-            consultationFee: defaults.consultationFee
-              ? Number(defaults.consultationFee)
-              : undefined,
           }
         : {}),
     } as FormValues,
@@ -71,7 +68,6 @@ export function OnboardingForm({ role, defaults }: Props) {
         ? {
             specialty: doctorValues.specialty,
             bio: doctorValues.bio || undefined,
-            consultationFee: doctorValues.consultationFee,
           }
         : {}),
     })
@@ -117,23 +113,6 @@ export function OnboardingForm({ role, defaults }: Props) {
             />
             {fieldErrors.specialty && (
               <p className="text-xs text-[var(--red)]">{fieldErrors.specialty.message}</p>
-            )}
-          </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="consultationFee">Consultation fee</Label>
-            <Input
-              id="consultationFee"
-              type="number"
-              step="0.01"
-              min="0"
-              placeholder="0.00"
-              {...register('consultationFee')}
-            />
-            {fieldErrors.consultationFee && (
-              <p className="text-xs text-[var(--red)]">
-                {fieldErrors.consultationFee.message}
-              </p>
             )}
           </div>
 

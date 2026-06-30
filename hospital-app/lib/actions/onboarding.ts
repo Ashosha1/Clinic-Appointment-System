@@ -7,10 +7,9 @@ import { createClient } from '@/lib/supabase/server'
 export interface OnboardingInput {
   fullName: string
   phone: string
-  // Doctor-only fields.
+  // Doctor-only fields. The consultation fee is set by an admin, not here.
   specialty?: string
   bio?: string
-  consultationFee?: number
 }
 
 type ActionResult = { error: string } | { error: null }
@@ -57,7 +56,6 @@ export async function saveOnboarding(input: OnboardingInput): Promise<ActionResu
     const payload = {
       specialty: input.specialty,
       bio: input.bio || null,
-      consultation_fee: input.consultationFee ?? null,
     }
 
     const { error: doctorError } = existingDoctor

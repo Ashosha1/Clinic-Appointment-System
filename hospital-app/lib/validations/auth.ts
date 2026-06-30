@@ -27,8 +27,5 @@ export const doctorOnboardingSchema = z.object({
   phone: z.string().min(7, 'Enter a valid phone number.'),
   specialty: z.string().min(2, 'Enter your specialty.'),
   bio: z.string().max(600, 'Keep your bio under 600 characters.').optional().or(z.literal('')),
-  consultationFee: z.coerce
-    .number({ invalid_type_error: 'Enter a number.' })
-    .min(0, 'Fee cannot be negative.'),
 })
 export type DoctorOnboardingValues = z.infer<typeof doctorOnboardingSchema>

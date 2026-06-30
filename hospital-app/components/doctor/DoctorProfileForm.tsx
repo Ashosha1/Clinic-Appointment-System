@@ -33,7 +33,7 @@ export function DoctorProfileForm({ doctorId, userId, initial }: DoctorProfileFo
   const [phone, setPhone] = useState(initial.phone)
   const [specialty, setSpecialty] = useState(initial.specialty)
   const [bio, setBio] = useState(initial.bio)
-  const [fee, setFee] = useState(initial.consultationFee?.toString() ?? '')
+  const [fee] = useState(initial.consultationFee?.toString() ?? '')
   const [buffer, setBuffer] = useState<BufferMinutes>(
     (BUFFER_OPTIONS.includes(initial.bufferMinutes as BufferMinutes)
       ? initial.bufferMinutes
@@ -69,18 +69,12 @@ export function DoctorProfileForm({ doctorId, userId, initial }: DoctorProfileFo
   }
 
   function onSave() {
-    const feeValue = fee.trim() === '' ? null : Number(fee)
-    if (feeValue != null && Number.isNaN(feeValue)) {
-      toast({ variant: 'destructive', title: 'Invalid fee', description: 'Enter a number.' })
-      return
-    }
     startTransition(async () => {
       const res = await updateDoctorProfile(doctorId, {
         fullName,
         phone,
         specialty,
         bio,
-        consultationFee: feeValue,
         avatarUrl,
         bufferMinutes: buffer,
         isActive,
@@ -149,11 +143,16 @@ export function DoctorProfileForm({ doctorId, userId, initial }: DoctorProfileFo
         <Field label="Consultation fee (OMR)">
           <Input
             type="number"
-            min="0"
-            step="0.001"
             value={fee}
-            onChange={(e) => setFee(e.target.value)}
+            readOnly
+            disabled
+            placeholder="Not set"
+            aria-describedby="fee-note"
+            className="cursor-not-allowed opacity-70"
           />
+          <p id="fee-note" className="text-xs text-[var(--txt3)]">
+            Set by admin.
+          </p>
         </Field>
       </div>
 
