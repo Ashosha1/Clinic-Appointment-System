@@ -135,12 +135,12 @@ export default function Home() {
         {/* HERO */}
         <section className="px-8 pb-[60px] pt-[72px] text-center">
           <h1 className="mx-auto max-w-2xl text-[26px] font-medium leading-tight sm:text-[38px]">
-            Healthcare scheduling,{' '}
-            <span className="text-[var(--p)]">done right.</span>
+            Your next appointment,{' '}
+            <span className="text-[var(--p)]">just a tap away.</span>
           </h1>
           <p className="mx-auto mt-4 max-w-[460px] text-[15px] leading-relaxed text-[var(--txt2)]">
-            Book appointments in seconds, reduce waiting time, and give doctors
-            the tools they need to focus on what matters — patients.
+            Book appointments in seconds, see real-time availability, and keep
+            your whole care history in one place — all from your phone.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Button asChild size="lg">
@@ -170,7 +170,7 @@ export default function Home() {
           id="how-it-works"
           className="bg-[var(--bg2)] px-8 py-[52px] text-center"
         >
-          <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--p)]">
+          <p className="text-[13px] font-semibold uppercase tracking-[0.08em] text-[var(--p)]">
             How it works
           </p>
           <h2 className="mt-2 text-2xl font-medium">
@@ -201,7 +201,7 @@ export default function Home() {
 
         {/* FEATURES */}
         <section id="features" className="bg-[var(--bg)] px-8 py-[52px] text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--p)]">
+          <p className="text-[13px] font-semibold uppercase tracking-[0.08em] text-[var(--p)]">
             Features
           </p>
           <h2 className="mt-2 text-2xl font-medium">
@@ -241,7 +241,7 @@ export default function Home() {
 
         {/* FAQ */}
         <section id="pricing" className="bg-[var(--bg)] px-8 py-[52px] text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--p)]">
+          <p className="text-[13px] font-semibold uppercase tracking-[0.08em] text-[var(--p)]">
             Questions
           </p>
           <h2 className="mt-2 text-2xl font-medium">Frequently asked</h2>
