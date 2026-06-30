@@ -8,7 +8,6 @@ import {
   Clock,
   Bell,
   History,
-  BarChart3,
   CalendarClock,
   Lock,
   Smartphone,
@@ -56,32 +55,32 @@ const FEATURES = [
   {
     icon: Clock,
     title: 'Real-time availability',
-    desc: 'Patients see live open slots, so every booking is one a doctor can actually take.',
+    desc: 'See live open slots and book the time that works for you — no calls, no waiting on hold.',
   },
   {
     icon: Bell,
-    title: 'Automated reminders',
-    desc: 'Confirmation and reminder messages to phone and email cut no-shows automatically.',
+    title: 'Appointment reminders',
+    desc: 'Get confirmation and reminder emails before every visit, so an appointment never slips your mind.',
   },
   {
     icon: History,
-    title: 'Full appointment history',
-    desc: 'Every visit, prescription, and note in one place — one tap away for patient and doctor.',
+    title: 'Your appointment history',
+    desc: 'Every visit, prescription, and note in one place — always just a tap away.',
   },
   {
-    icon: BarChart3,
-    title: 'Clinic analytics',
-    desc: 'Track volume, wait times, and top doctors with dashboards built for clinic directors.',
+    icon: Search,
+    title: 'Find the right doctor',
+    desc: 'Browse doctors by specialty, fee, and availability to choose the one who fits you best.',
   },
   {
     icon: CalendarClock,
     title: 'Easy rescheduling',
-    desc: 'Move an appointment in one step — the old slot is freed for someone else instantly.',
+    desc: 'Need a different time? Reschedule in one step — your old slot is freed up instantly.',
   },
   {
     icon: ShieldCheck,
-    title: 'Secure by design',
-    desc: 'Role-scoped access and encryption in transit and at rest keep health data protected.',
+    title: 'Private and secure',
+    desc: 'Your health data is encrypted and only ever visible to you and your care team.',
   },
 ]
 
@@ -206,7 +205,7 @@ export default function Home() {
             Features
           </p>
           <h2 className="mt-2 text-2xl font-medium">
-            Everything the clinic needs
+            Everything you need to stay on top of your care
           </h2>
           <div className="mx-auto mt-10 grid max-w-5xl gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {FEATURES.map(({ icon: Icon, title, desc }) => (
