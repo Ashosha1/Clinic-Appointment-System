@@ -2,7 +2,6 @@ import Link from 'next/link'
 import {
   ShieldCheck,
   CalendarPlus,
-  Stethoscope,
   Search,
   CalendarCheck,
   Building2,
@@ -87,8 +86,6 @@ const FEATURES = [
 ]
 
 const STATS = [
-  { value: '200+', label: 'Clinics onboarded' },
-  { value: '50k+', label: 'Appointments booked' },
   { value: '40%', label: 'Reduction in wait time' },
   { value: '98%', label: 'Patient satisfaction' },
 ]
@@ -151,12 +148,6 @@ export default function Home() {
               <Link href="/signup">
                 <CalendarPlus size={16} aria-hidden="true" />
                 Book an appointment
-              </Link>
-            </Button>
-            <Button asChild variant="ghost" size="lg">
-              <Link href="/login">
-                <Stethoscope size={16} aria-hidden="true" />
-                I&apos;m a doctor
               </Link>
             </Button>
           </div>
@@ -237,7 +228,7 @@ export default function Home() {
 
         {/* STATS BAND */}
         <section id="for-clinics" className="px-8 py-[52px]">
-          <div className="mx-auto grid max-w-5xl grid-cols-2 gap-8 rounded-[var(--radius)] bg-[var(--p)] px-8 py-10 md:grid-cols-4">
+          <div className="mx-auto grid max-w-3xl grid-cols-2 gap-8 rounded-[var(--radius)] bg-[var(--p)] px-8 py-10">
             {STATS.map(({ value, label }) => (
               <div key={label} className="text-center">
                 <div className="text-[28px] font-semibold text-white">
@@ -262,10 +253,10 @@ export default function Home() {
         <section className="px-8 py-[52px]">
           <div className="mx-auto max-w-5xl rounded-[var(--radius)] border border-[var(--border)] bg-[var(--p3)] px-8 py-12 text-center">
             <h2 className="text-2xl font-medium text-[var(--txt)]">
-              Ready to simplify your clinic?
+              Ready to book your next appointment?
             </h2>
             <p className="mx-auto mt-2 max-w-md text-sm text-[var(--txt2)]">
-              Join 200+ clinics already saving time with MediConnect.
+              Join thousands of patients managing their care with MediConnect.
             </p>
             <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Button asChild size="lg">
@@ -274,8 +265,13 @@ export default function Home() {
                   Book an appointment
                 </Link>
               </Button>
-              <Button asChild variant="ghost" size="lg">
-                <Link href="/signup">Register your clinic</Link>
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="border-[var(--p)] text-[var(--p)] hover:bg-[var(--p3)] hover:text-[var(--p)]"
+              >
+                <Link href="/signup">Register</Link>
               </Button>
             </div>
           </div>

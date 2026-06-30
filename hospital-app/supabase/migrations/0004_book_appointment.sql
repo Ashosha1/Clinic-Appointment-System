@@ -1,8 +1,4 @@
--- Chunk 4: atomic booking guard.
--- Re-checks the slot inside the transaction and inserts the appointment +
--- history row together. The appointments_no_double_booking unique partial
--- index is the real arbiter under concurrency; we also do an explicit check
--- for a friendlier message on the common (non-racing) path.
+
 
 create or replace function public.book_appointment_atomic(
   p_doctor_id uuid,

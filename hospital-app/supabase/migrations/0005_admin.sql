@@ -1,6 +1,4 @@
--- Chunk 5: admin needs to suspend/activate any user. doctors already have
--- is_active; add the same flag to profiles so patients (and doctors at the
--- account level) can be suspended. Existing rows default to active.
+
 
 alter table public.profiles
   add column if not exists is_active boolean not null default true;

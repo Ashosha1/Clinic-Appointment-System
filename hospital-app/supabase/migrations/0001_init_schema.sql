@@ -1,7 +1,4 @@
--- ============================================================================
--- MediConnect — 0001 init schema
--- Tables, indexes, and triggers. RLS lives in 0002_rls_policies.sql.
--- ============================================================================
+
 
 create extension if not exists "pgcrypto";
 

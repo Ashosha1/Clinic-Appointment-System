@@ -1,8 +1,4 @@
--- ============================================================================
--- MediConnect — 0003 Storage: avatars bucket
--- Public-read bucket for profile photos. Users may write only within a folder
--- named after their own auth uid (e.g. "<uid>/photo.jpg").
--- ============================================================================
+
 
 insert into storage.buckets (id, name, public)
 values ('avatars', 'avatars', true)
