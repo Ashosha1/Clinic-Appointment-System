@@ -8,6 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "make-admin": "node scripts/make-admin.mjs",
+    "create-admin": "node scripts/create-admin.mjs",
     "types": "supabase gen types typescript --local > types/database.ts"
   },
   "dependencies": {
