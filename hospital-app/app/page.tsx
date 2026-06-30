@@ -28,10 +28,10 @@ const NAV_LINKS = [
 ]
 
 const TRUST = [
-  { icon: Lock, label: 'HIPAA-ready security' },
-  { icon: Clock, label: 'Real-time availability' },
-  { icon: Zap, label: 'Instant confirmations' },
-  { icon: Smartphone, label: 'Works on any device' },
+  { icon: Lock, label: 'Your health data stays private' },
+  { icon: Clock, label: 'See real-time openings' },
+  { icon: Zap, label: 'Instant booking confirmation' },
+  { icon: Smartphone, label: 'Book from any device' },
 ]
 
 const STEPS = [
