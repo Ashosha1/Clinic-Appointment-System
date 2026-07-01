@@ -23,6 +23,85 @@ const MUTED = '#3D5A52'
 const BORDER = '#D6E8E0'
 const BG = '#F4F8F6'
 
+export interface WelcomeEmailData {
+  name: string
+  email: string
+  tempPassword: string
+  role: 'doctor' | 'admin' | 'patient'
+  loginUrl: string
+}
+
+/** Account-created email with login link and temporary credentials. */
+export function buildWelcomeEmail(d: WelcomeEmailData): {
+  subject: string
+  html: string
+  text: string
+} {
+  const roleLabel =
+    d.role === 'doctor' ? 'doctor' : d.role === 'admin' ? 'administrator' : 'member'
+  const subject = 'Your MediConnect account is ready'
+  const heading = `Welcome to MediConnect, ${d.name}`
+  const intro = `An account has been created for you as a ${roleLabel}. Use the temporary password below to sign in, then change it from your profile.`
+
+  const html = `<!doctype html>
+<html>
+  <body style="margin:0;padding:0;background:${BG};font-family:'Inter',Arial,Helvetica,sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${BG};padding:32px 12px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;background:#ffffff;border:1px solid ${BORDER};border-radius:12px;overflow:hidden;">
+            <tr>
+              <td style="padding:24px 28px;border-bottom:1px solid ${BORDER};">
+                <span style="font-size:18px;font-weight:600;color:${BRAND_DARK};letter-spacing:-0.01em;">MediConnect</span>
+                <span style="display:block;font-size:11px;color:${MUTED};margin-top:2px;">Your trusted path to care</span>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:28px;">
+                <h1 style="margin:0 0 8px;font-size:19px;font-weight:600;color:${INK};">${heading}</h1>
+                <p style="margin:0 0 20px;font-size:14px;line-height:1.6;color:${MUTED};">${intro}</p>
+
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${BG};border:1px solid ${BORDER};border-radius:10px;padding:14px 16px;">
+                  <tr><td style="padding:6px 0;color:${MUTED};font-size:13px;width:150px;">Email</td><td style="padding:6px 0;color:${INK};font-size:14px;font-weight:500;">${d.email}</td></tr>
+                  <tr><td style="padding:6px 0;color:${MUTED};font-size:13px;">Temporary password</td><td style="padding:6px 0;color:${INK};font-size:14px;font-weight:500;font-family:monospace;">${d.tempPassword}</td></tr>
+                </table>
+
+                <div style="text-align:center;margin:24px 0 4px;">
+                  <a href="${d.loginUrl}" style="display:inline-block;background:${BRAND};color:#ffffff;text-decoration:none;font-size:14px;font-weight:500;padding:11px 22px;border-radius:8px;">Sign in to MediConnect</a>
+                </div>
+                <p style="margin:16px 0 0;font-size:12px;color:#7A9A90;">For your security, please change this password after your first sign-in.</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:18px 28px;border-top:1px solid ${BORDER};">
+                <p style="margin:0;font-size:11px;color:#7A9A90;">© 2026 MediConnect. This is an automated message — please don't reply.</p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`
+
+  const text = [
+    heading,
+    '',
+    intro,
+    '',
+    `Email:              ${d.email}`,
+    `Temporary password: ${d.tempPassword}`,
+    '',
+    `Sign in: ${d.loginUrl}`,
+    '',
+    'Please change this password after your first sign-in.',
+    '',
+    '© 2026 MediConnect — automated message, please do not reply.',
+  ].join('\n')
+
+  return { subject, html, text }
+}
+
 interface Copy {
   subject: string
   heading: string

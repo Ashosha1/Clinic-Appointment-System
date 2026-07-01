@@ -4,8 +4,17 @@ import { revalidatePath } from 'next/cache'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 import { createClient, createServiceRoleClient } from '@/lib/supabase/server'
+import { sendEmail } from '@/lib/notifications/email'
+import { buildWelcomeEmail } from '@/lib/notifications/emailTemplates'
+import { generateTempPassword } from '@/lib/password'
 import type { ActionResult } from './_helpers'
-import type { AppointmentStatus, Database } from '@/types/database'
+import type { AppointmentStatus, Database, UserRole } from '@/types/database'
+
+function siteUrl(): string {
+  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`
+  return 'http://localhost:3000'
+}
 
 interface AdminContext {
   supabase: SupabaseClient<Database>
@@ -337,5 +346,94 @@ export async function updateDoctorDetails(
   if (error) return { error: error.message }
 
   revalidatePath('/admin/doctors')
+  return { error: null }
+}
+
+export interface CreateUserInput {
+  fullName: string
+  email: string
+  role: Extract<UserRole, 'doctor' | 'admin'>
+  /** Temporary password. If omitted, one is generated. */
+  password?: string
+  phone?: string
+  /** Required when role is 'doctor'. */
+  specialty?: string
+}
+
+/**
+ * Admin-only: creates a new doctor or admin account. Creates the auth user
+ * (email pre-confirmed) with a temporary password, the matching profile, and a
+ * doctors row for doctors, then emails the new user their login credentials.
+ */
+export async function createUserAsAdmin(input: CreateUserInput): Promise<ActionResult> {
+  const auth = await authorizeAdmin()
+  if ('error' in auth) return auth
+
+  const fullName = input.fullName.trim()
+  const email = input.email.trim().toLowerCase()
+  const phone = input.phone?.trim() || null
+  const specialty = input.specialty?.trim() || ''
+  const password = input.password?.trim() || generateTempPassword()
+
+  if (!fullName) return { error: 'Name is required.' }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: 'Enter a valid email.' }
+  if (password.length < 8) return { error: 'Password must be at least 8 characters.' }
+  if (input.role === 'doctor' && !specialty) {
+    return { error: 'Specialty is required for doctors.' }
+  }
+
+  const service = createServiceRoleClient()
+
+  // 1. Create the auth user with the email already confirmed.
+  const { data: created, error: createErr } = await service.auth.admin.createUser({
+    email,
+    password,
+    email_confirm: true,
+    user_metadata: { full_name: fullName, role: input.role },
+  })
+  if (createErr) {
+    const exists = /already.*registered|already exists/i.test(createErr.message)
+    return { error: exists ? 'An account with that email already exists.' : createErr.message }
+  }
+  const userId = created.user.id
+
+  // 2. Create the profile. On failure, roll back the orphaned auth user.
+  const { data: profile, error: profileErr } = await service
+    .from('profiles')
+    .insert({ user_id: userId, role: input.role, full_name: fullName, phone })
+    .select('id')
+    .single()
+  if (profileErr || !profile) {
+    await service.auth.admin.deleteUser(userId)
+    return { error: profileErr?.message ?? 'Could not create the profile.' }
+  }
+
+  // 3. For doctors, create the doctors row.
+  if (input.role === 'doctor') {
+    const { error: doctorErr } = await service
+      .from('doctors')
+      .insert({ profile_id: profile.id, specialty })
+    if (doctorErr) {
+      await service.auth.admin.deleteUser(userId)
+      return { error: doctorErr.message }
+    }
+  }
+
+  // 4. Email the new user their login credentials. Best-effort.
+  try {
+    const { subject, html, text } = buildWelcomeEmail({
+      name: fullName,
+      email,
+      tempPassword: password,
+      role: input.role,
+      loginUrl: `${siteUrl()}/login`,
+    })
+    await sendEmail({ to: email, subject, html, text })
+  } catch (err) {
+    console.error('[createUserAsAdmin] welcome email failed:', err)
+  }
+
+  revalidatePath('/admin/doctors')
+  revalidatePath('/admin/patients')
   return { error: null }
 }
