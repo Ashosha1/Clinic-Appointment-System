@@ -12,6 +12,9 @@ import {
   Lock,
   Smartphone,
   Zap,
+  Mail,
+  Phone,
+  MapPin,
 } from 'lucide-react'
 
 import { Faq } from '@/components/marketing/Faq'
@@ -22,8 +25,14 @@ import { Button } from '@/components/ui/button'
 const NAV_LINKS = [
   { label: 'How it works', href: '#how-it-works' },
   { label: 'Features', href: '#features' },
-  { label: 'For clinics', href: '#for-clinics' },
-  { label: 'Pricing', href: '#pricing' },
+  { label: 'Contact', href: '#contact' },
+]
+
+const CONTACT = [
+  { icon: Mail, label: 'Email', value: 'support@mediconnect.com', href: 'mailto:support@mediconnect.com' },
+  { icon: Phone, label: 'Phone', value: '+968 2400 0000', href: 'tel:+96824000000' },
+  { icon: MapPin, label: 'Address', value: 'Al Khuwair, Muscat, Oman' },
+  { icon: Clock, label: 'Hours', value: 'Sun–Thu, 8:00 AM – 6:00 PM' },
 ]
 
 const TRUST = [
@@ -275,6 +284,42 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* CONTACT */}
+        <section id="contact" className="bg-[var(--bg2)] px-8 py-[52px] text-center">
+          <p className="text-[13px] font-semibold uppercase tracking-[0.08em] text-[var(--p)]">
+            Contact
+          </p>
+          <h2 className="mt-2 text-2xl font-medium">Get in touch</h2>
+          <p className="mx-auto mt-2 max-w-md text-sm text-[var(--txt2)]">
+            Questions about your appointment or account? Reach our support team.
+          </p>
+          <div className="mx-auto mt-10 grid max-w-4xl gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {CONTACT.map(({ icon: Icon, label, value, href }) => (
+              <div
+                key={label}
+                className="flex flex-col items-center rounded-[var(--radius)] border border-[var(--border)] bg-[var(--card)] p-6"
+              >
+                <span className="flex h-[38px] w-[38px] items-center justify-center rounded-[var(--radius-sm)] bg-[var(--p3)] text-[var(--p)]">
+                  <Icon size={20} aria-hidden="true" />
+                </span>
+                <div className="mt-3 text-xs font-medium uppercase tracking-[0.04em] text-[var(--txt3)]">
+                  {label}
+                </div>
+                {href ? (
+                  <a
+                    href={href}
+                    className="mt-1 text-sm text-[var(--txt)] transition-colors hover:text-[var(--p)]"
+                  >
+                    {value}
+                  </a>
+                ) : (
+                  <div className="mt-1 text-sm text-[var(--txt)]">{value}</div>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
       </main>
 
       {/* FOOTER */}
@@ -292,10 +337,15 @@ export default function Home() {
             </span>
           </div>
           <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
-            {['Privacy', 'Terms', 'Support', 'Contact'].map((label) => (
+            {[
+              { label: 'Privacy', href: '#' },
+              { label: 'Terms', href: '#' },
+              { label: 'Support', href: '#contact' },
+              { label: 'Contact', href: '#contact' },
+            ].map(({ label, href }) => (
               <a
                 key={label}
-                href="#"
+                href={href}
                 className="text-sm text-[var(--txt2)] transition-colors hover:text-[var(--txt)]"
               >
                 {label}
